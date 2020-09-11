@@ -1,6 +1,7 @@
 import { getSnapshot, onSnapshot, onPatch } from "mobx-state-tree"
 import { WishList, WishListItem } from "./WishList"
 import { snapshotProcessor } from "mobx-state-tree/dist/internal";
+import { reaction } from "mobx"
 
 // test WishListItem
 it("can create an instance of model", () => {
@@ -111,3 +112,30 @@ it("can add new item using onPatch", () => {
 
     expect(patches).toMatchSnapshot();
 });
+
+it("can calculate the total price of a wishlist", () =>{
+    const list =  WishList.create({
+        items:[
+            {
+                name: "chocolate",
+                price: 50,
+            },
+            {
+                name: "fruit",
+                price: 40,
+            }
+        ]
+    })
+
+    expect(list.totalPrice).toBe(90);
+
+    let changed = 0;
+    reaction(() => list.totalPrice, () => changed++)
+
+    expect(changed).toBe(0);
+    console.log(list.totalPrice);
+    list.items[0].changeName("Test");
+    expect(changed).toBe(0);
+    list.items[0].changePrice(10);
+    expect(changed).toBe(1);
+})
