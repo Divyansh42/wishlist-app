@@ -1,4 +1,4 @@
-import { types } from "mobx-state-tree"
+import { types, Instance } from "mobx-state-tree"
 const data = {
     "name" : "Headphone",
     "price" : 999,
@@ -10,13 +10,13 @@ export const WishListItem = types.model({
     image: ""
 })
 .actions(self => ({
-    changeName(newName) {
+    changeName(newName: string) {
         self.name = newName
     },
-    changePrice(newPrice) {
+    changePrice(newPrice: number) {
         self.price = newPrice
     },
-    changeImage(newImage) {
+    changeImage(newImage: string) {
         self.image = newImage
     }
 }))
@@ -26,12 +26,18 @@ export const WishList = types.model({
 
 })
 .actions(self => ({
-    add(item) {
+    add(item: IWishListItem) {
         self.items.push(item)
     }
 }))
 .views(self => ({
     get totalPrice() {
-        return self.items.reduce((sum, entry) => sum + entry.price, 0)
+        return self.items.reduce((sum: number, entry: IWishListItem) => sum + entry.price, 0)
     }
 }))
+
+export interface IWishListItem {
+    name: string;
+    price: number;
+    image?: string;
+  } 
