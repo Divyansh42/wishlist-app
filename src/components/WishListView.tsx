@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import { observer } from "mobx-react"
 
 import WishListItemView from "./WishListItemView"
+import WishListItemEntry from "./WishListItemEntry"
 // import IWishListItem from "../models/WishList"
 
 class WishListView extends Component {
@@ -20,6 +21,7 @@ class WishListView extends Component {
                     ))}
                 </ul>
                 Total: {wishList.totalPrice}
+                <WishListItemEntry wishListItemEntry={wishList} />
             </div>
         );    
     }
