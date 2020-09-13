@@ -29,6 +29,7 @@ class WishListItemEntry extends Component {
 
     }
     onAdd = () => {
+        console.log(this.props.wishList);
         this.props.wishList.add(this.state.entry);
         this.setState({
           entry: WishListItem.create({
