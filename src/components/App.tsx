@@ -29,6 +29,9 @@ class App extends Component {
           ))}
         </select>
         {selectedUser && <WishListView wishList={selectedUser.wishList} />}
+        {selectedUser && (
+          <button onClick={selectedUser.getSuggestions}>Suggestions</button>
+        )}
       </div>
     );
   }

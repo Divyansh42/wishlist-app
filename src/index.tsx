@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import './assets/index.css';
 import App from './components/App';
 
-import { getSnapshot } from "mobx-state-tree"
+import { getSnapshot, addMiddleware } from "mobx-state-tree"
 
 import { Group } from "./models/Group"
 
@@ -42,6 +42,10 @@ let initialState: any = {
 //   if (WishList.is(json)) initialState = json
 // }
 let group = Group.create(initialState);
+addMiddleware(group, (call, next) => {
+  console.log(`[${call.type}] ${call.name}`);
+  return next(call);
+});
 // let wishList = WishList.create(initialState);
 
 // onSnapshot(wishList, snapshot  => {
