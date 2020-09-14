@@ -4,7 +4,7 @@ import './assets/index.css';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
 
-import { onSnapshot } from "mobx-state-tree"
+import { getSnapshot } from "mobx-state-tree"
 
 import { WishList } from "./models/WishList"
 
@@ -25,23 +25,37 @@ let initialState: any = {
   ],
 }
 
-if(localStorage.getItem("wishlistapp")) {
-  const json: JSON = JSON.parse(localStorage.getItem("wishlistapp") || "{}");
-  if (WishList.is(json)) initialState = json
+// if(localStorage.getItem("wishlistapp")) {
+//   const json: JSON = JSON.parse(localStorage.getItem("wishlistapp") || "{}");
+//   if (WishList.is(json)) initialState = json
+// }
+let wishList = WishList.create(initialState);
+
+// onSnapshot(wishList, snapshot  => {
+//   localStorage.setItem("wishlistapp", JSON.stringify(snapshot));
+// })
+
+function renderApp() {
+    ReactDOM.render(
+    <React.StrictMode>
+      <App wishList={wishList} />
+    </React.StrictMode>,
+    document.getElementById('root')
+    );
 }
-const wishList = WishList.create(initialState);
 
-onSnapshot(wishList, snapshot  => {
-  localStorage.setItem("wishlistapp", JSON.stringify(snapshot));
-})
-
-ReactDOM.render(
-  <React.StrictMode>
-    <App wishList={wishList} />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
-
-setInterval(() => {
-  wishList.items[0].changePrice(wishList.items[0].price + 1)
-}, 1000);
+renderApp();
+if(module.hot) {
+  module.hot.accept(["./components/App"], () => {
+    renderApp()
+  });
+  module.hot.accept(["./models/WishList"], () => {
+    // new model definitions
+    const snapshot = getSnapshot(wishList);
+    wishList = WishList.create(snapshot);
+    renderApp();
+  });
+}
+// setInterval(() => {
+//   wishList.items[0].changePrice(wishList.items[0].price + 1)
+// }, 1000);
